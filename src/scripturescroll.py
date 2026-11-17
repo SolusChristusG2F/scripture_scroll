@@ -101,6 +101,7 @@ class VersePage(CenterColumn):
         self.verse_text = VerseText(align=ft.Alignment.CENTER)
         self.verse_ref = VerseRefText(align=ft.Alignment.CENTER)
         self.bookmark_button = ft.IconButton(ft.Icons.BOOKMARK_ADD)
+        self.share_button = ft.IconButton(ft.Icons.SHARE)
         self.alignment = ft.MainAxisAlignment.CENTER
         self.controls=[
             CenterRow(
@@ -117,7 +118,8 @@ class VersePage(CenterColumn):
             ),
             CenterRow(
                 controls=[
-                    self.bookmark_button
+                    self.bookmark_button,
+                    self.share_button
                 ]
             )
         ]
@@ -131,8 +133,9 @@ class VersePage(CenterColumn):
             self.verse_text.value = body
             self.verse_ref.value = title
 
-    def remove_bookmark_button(self):
+    def remove_buttons(self):
         self.controls[1].controls.remove(self.bookmark_button)
+        self.controls[1].controls.remove(self.share_button)
 
 @ft.control
 class VerseContainer(ft.Container):
@@ -151,6 +154,7 @@ class BookmarkPage(CenterColumn):
         self.verse_text = VerseText(align=ft.Alignment.CENTER)
         self.verse_ref = VerseRefText(align=ft.Alignment.CENTER)
         self.remove_button = ft.IconButton(ft.Icons.BOOKMARK_REMOVE)
+        self.share_button = ft.IconButton(ft.Icons.SHARE)
         self.remove_button.on_click = self.remove_self
         self.alignment = ft.MainAxisAlignment.CENTER
         self.controls=[
@@ -168,12 +172,12 @@ class BookmarkPage(CenterColumn):
             ),
             CenterRow(
                 controls=[
-                    self.remove_button
+                    self.remove_button,
+                    self.share_button
                 ]
             )
         ]
         
-
     def refresh(self, title=None, body=None):
         self.verse_text.value = body
         self.verse_ref.value = title   

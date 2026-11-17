@@ -1,7 +1,7 @@
 import flet as ft
 from scripturescroll import *
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = "Scripture Scroll"
     page.bgcolor = ft.Colors.BLUE_GREY
     page.appbar = ft.AppBar(bgcolor=ft.Colors.BLUE_GREY_400, title=ft.Text("Scripture Scroll", text_align="center", align=ft.Alignment.CENTER))
@@ -14,15 +14,23 @@ def main(page: ft.Page):
         verse = e.control.parent.parent.verse_text.value
         bookmark_page = BookmarkPage()
         bookmark_page.refresh(ref, verse)
+        bookmark_page.share_button.on_click = share_verse
 
         if not bookmark_page in bookmarks_view.controls:
             bookmarks_view.controls.append(bookmark_page)
+
+    async def share_verse(e):
+        ref = e.control.parent.parent.verse_ref.value
+        verse = e.control.parent.parent.verse_text.value
+        share = f"{ref} ASV: {verse}"
+        result = await ft.Share().share_text(share, title=f"Share {ref} ASV:", subject=f"Shared verse: {ref} (ASV)")
 
     def new_verse(e):
             verse.generate()
             verse_page = VersePage()
             verse_page.refresh(verse)
             verse_page.bookmark_button.on_click=add_bookmark
+            verse_page.share_button.on_click=share_verse
             
             main_view.controls.append(
                 verse_page
@@ -30,11 +38,12 @@ def main(page: ft.Page):
 
     first_page = VersePage()
     first_page.refresh(verse, True, "Scripture Scroll", "Welcome to Scripture Scroll! Swipe up to get started!")
-    first_page.remove_bookmark_button()
+    first_page.remove_buttons()
 
     second_page = VersePage()
     second_page.refresh(verse)
     second_page.bookmark_button.on_click=add_bookmark
+    second_page.share_button.on_click=share_verse
 
     main_view = ft.PageView(
         on_change=new_verse,
@@ -104,7 +113,7 @@ def main(page: ft.Page):
 
     bookmark_start = VersePage()
     bookmark_start.refresh(verse, is_title=True, title="Bookmarks", body="Find all your bookmars here! Simply click the button on the bottom of any verse to bookmark it!")
-    bookmark_start.remove_bookmark_button()
+    bookmark_start.remove_buttons()
 
     bookmarks_view = ft.PageView(
         horizontal=False,
