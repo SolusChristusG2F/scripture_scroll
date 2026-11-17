@@ -12,9 +12,8 @@ def main(page: ft.Page):
     def add_bookmark(e):
         ref = e.control.parent.parent.verse_ref.value
         verse = e.control.parent.parent.verse_text.value
-        bookmark_page = VersePage()
-        bookmark_page.refresh(verse, True, ref, verse)
-        bookmark_page.remove_bookmark_button()
+        bookmark_page = BookmarkPage()
+        bookmark_page.refresh(ref, verse)
 
         if not bookmark_page in bookmarks_view.controls:
             bookmarks_view.controls.append(bookmark_page)

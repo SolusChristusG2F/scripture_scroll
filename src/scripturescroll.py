@@ -121,6 +121,7 @@ class VersePage(CenterColumn):
                 ]
             )
         ]
+        
 
     def refresh(self, r_verse : RandomVerse, is_title=None, title=None, body=None):
         if not is_title:
@@ -132,6 +133,50 @@ class VersePage(CenterColumn):
 
     def remove_bookmark_button(self):
         self.controls[1].controls.remove(self.bookmark_button)
+
+@ft.control
+class VerseContainer(ft.Container):
+    padding: int = 25
+    width: int = 350
+    height: int = 350
+    border_radius: int = 30
+    bgcolor: ft.Colors = ft.Colors.WHITE
+
+@ft.control
+class BookmarkPage(CenterColumn): 
+    def remove_self(e):
+        e.parent.controls.remove(e)
+
+    def init(self):
+        self.verse_text = VerseText(align=ft.Alignment.CENTER)
+        self.verse_ref = VerseRefText(align=ft.Alignment.CENTER)
+        self.remove_button = ft.IconButton(ft.Icons.BOOKMARK_REMOVE)
+        self.remove_button.on_click = self.remove_self
+        self.alignment = ft.MainAxisAlignment.CENTER
+        self.controls=[
+            CenterRow(
+                controls=[
+                    VerseContainer(
+                        content=CenterScrollColumn(
+                            controls=[
+                                self.verse_ref,
+                                self.verse_text
+                            ],
+                        )
+                    )
+                ],
+            ),
+            CenterRow(
+                controls=[
+                    self.remove_button
+                ]
+            )
+        ]
+        
+
+    def refresh(self, title=None, body=None):
+        self.verse_text.value = body
+        self.verse_ref.value = title   
 
 @ft.control
 class PoolDropdown(ft.Dropdown):
