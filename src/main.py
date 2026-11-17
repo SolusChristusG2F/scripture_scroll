@@ -8,13 +8,22 @@ def main(page: ft.Page):
 
     verse = RandomVerse(book_specific=False, group_specific=False)
     verse_page = VersePage()
-    total_verses = []
+
+    def add_bookmark(e):
+        ref = e.control.parent.parent.verse_ref.value
+        verse = e.control.parent.parent.verse_text.value
+        bookmark_page = VersePage()
+        bookmark_page.refresh(verse, True, ref, verse)
+        bookmark_page.remove_bookmark_button()
+
+        if not bookmark_page in bookmarks_view.controls:
+            bookmarks_view.controls.append(bookmark_page)
 
     def new_verse(e):
             verse.generate()
-            total_verses.append(verse)
             verse_page = VersePage()
             verse_page.refresh(verse)
+            verse_page.bookmark_button.on_click=add_bookmark
             
             main_view.controls.append(
                 verse_page
@@ -22,9 +31,11 @@ def main(page: ft.Page):
 
     first_page = VersePage()
     first_page.refresh(verse, True, "Scripture Scroll", "Welcome to Scripture Scroll! Swipe up to get started!")
+    first_page.remove_bookmark_button()
 
     second_page = VersePage()
     second_page.refresh(verse)
+    second_page.bookmark_button.on_click=add_bookmark
 
     main_view = ft.PageView(
         on_change=new_verse,
@@ -92,6 +103,18 @@ def main(page: ft.Page):
         ]
     )
 
+    bookmark_start = VersePage()
+    bookmark_start.refresh(verse, is_title=True, title="Bookmarks", body="Find all your bookmars here! Simply click the button on the bottom of any verse to bookmark it!")
+    bookmark_start.remove_bookmark_button()
+
+    bookmarks_view = ft.PageView(
+        horizontal=False,
+        expand=True,
+        controls=[
+            bookmark_start
+        ]
+    )
+
     def return_to_main(e):
         if not main_view in page.controls:
             page.clean()
@@ -102,15 +125,15 @@ def main(page: ft.Page):
             page.clean()
             page.add(settings_view)
 
-    # def switch_to_bookmarks(e):
-    #     if not bookmarks_view in page.controls:
-    #         page.clean()
-    #         page.add(bookmarks_view)
+    def switch_to_bookmarks(e):
+        if not bookmarks_view in page.controls:
+            page.clean()
+            page.add(bookmarks_view)
 
     page.navigation_bar = ft.NavigationBar(
         destinations=[
             ft.IconButton(ft.Icons.SWIPE_UP, on_click=return_to_main),
-            ft.IconButton(ft.Icons.BOOK), #on_click=switch_to_bookmarks),
+            ft.IconButton(ft.Icons.BOOK, on_click=switch_to_bookmarks),
             ft.IconButton(ft.Icons.SETTINGS, on_click=switch_to_settings)
         ]
     )

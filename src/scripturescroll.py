@@ -96,7 +96,7 @@ class VerseContainer(ft.Container):
     bgcolor: ft.Colors = ft.Colors.WHITE
 
 @ft.control
-class VersePage(CenterColumn):
+class VersePage(CenterColumn): 
     def init(self):
         self.verse_text = VerseText(align=ft.Alignment.CENTER)
         self.verse_ref = VerseRefText(align=ft.Alignment.CENTER)
@@ -130,27 +130,8 @@ class VersePage(CenterColumn):
             self.verse_text.value = body
             self.verse_ref.value = title
 
-@ft.control
-class BookmarkPage(CenterColumn):
-    def init(self):
-        self.verse_text = VerseText(align=ft.Alignment.CENTER)
-        self.verse_ref = VerseRefText(align=ft.Alignment.CENTER)
-        self.bookmark_button = ft.IconButton(ft.Icons.BOOKMARK_ADD)
-        self.alignment = ft.MainAxisAlignment.CENTER
-        self.controls=[
-            CenterRow(
-                controls=[
-                    VerseContainer(
-                        content=CenterScrollColumn(
-                            controls=[
-                                self.verse_ref,
-                                self.verse_text
-                            ],
-                        )
-                    )
-                ],
-            )
-        ]
+    def remove_bookmark_button(self):
+        self.controls[1].controls.remove(self.bookmark_button)
 
 @ft.control
 class PoolDropdown(ft.Dropdown):
