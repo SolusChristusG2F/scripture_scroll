@@ -1,0 +1,27 @@
+[project]
+name = "bible-doomscroll-app"
+version = "1.0.0"
+description = "Scrolling, but replaced with the Bible!"
+requires-python = ">=3.10"
+authors = [
+    { name = "Ethan Chapman", email = "ethanchapman1809@gmail.com" }
+]
+dependencies = [
+    "flet",
+    "pythonbible"
+]
+
+[dependency-groups]
+dev = [
+    "flet-cli",
+    "flet-desktop",
+    "flet-web"
+]
+
+[tool.flet]
+org = "dev.flet"
+company = "Flet"
+copyright = "Copyright (C) 2023-2026 by Flet"
+
+[tool.flet.app]
+path = "src"
